@@ -5,7 +5,7 @@
 /// </summary>
 public static class Hotels
 {
-    public static List<Hotel> Data =
+    public static readonly List<Hotel> Data =
     [
         new()
         {

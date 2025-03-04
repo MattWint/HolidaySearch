@@ -8,7 +8,7 @@
 /// </summary>
 public static class Flights
 {
-    public static List<Flight> Data =
+    public static readonly List<Flight> Data =
     [
         new()
         {
