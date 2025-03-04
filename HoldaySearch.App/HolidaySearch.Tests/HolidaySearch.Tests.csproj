@@ -22,15 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="flights.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="hotels.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+      <ProjectReference Include="..\HolidaySearch.App\HolidaySearch.App.csproj" />
     </ItemGroup>
 
 </Project>
