@@ -4,14 +4,14 @@ using Shouldly;
 
 namespace HolidaySearch.Tests;
 
-public class Tests
+public class HolidaySearchFindsOptimalMatchTest
 {
 
     [Test]
     [TestCaseSource(nameof(HolidayTestCases))]
     public void ShouldReturn_ExpectedSearchResultsWhenRequestPopulated(HolidaySearchRequest request, HolidaySearchResponse response)
     {
-        var holidaySearch = new App.HolidaySearch("flights.json", "hotels.json", request);
+        var holidaySearch = new App.HolidaySearch(request);
 
         var topSearchResult = holidaySearch.Results.First();
 
