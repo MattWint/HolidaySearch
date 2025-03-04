@@ -25,29 +25,58 @@ public class Tests
     private static IEnumerable<TestCaseData> HolidayTestCases()
     {
         yield return new TestCaseData(
-            new HolidaySearchRequest { DepartingFrom = "MAN", ArrivingAt = "AGP", DepartureDate = new DateTime(2023, 07, 01), Duration = 7 },
+            new HolidaySearchRequest
+                { DepartingFrom = "MAN", ArrivingAt = "AGP", DepartureDate = new DateTime(2023, 07, 01), Duration = 7 },
             new HolidaySearchResponse
             {
-                Flight = new Flight { Id = 2, Airline = "Oceanic Airlines", From = "MAN", To = "AGP", Price = 245, DepartureDate = new DateTime(2023, 07, 01) },
-                Hotel = new Hotel { Id = 9, Name = "Nh Malaga", ArrivalDate = new DateTime(2023, 07, 01), PricePerNight = 83, LocalAirports = ["AGP"], Nights = 7 }
+                Flight = new Flight
+                {
+                    Id = 2, Airline = "Oceanic Airlines", From = "MAN", To = "AGP", Price = 245,
+                    DepartureDate = new DateTime(2023, 07, 01)
+                },
+                Hotel = new Hotel
+                {
+                    Id = 9, Name = "Nh Malaga", ArrivalDate = new DateTime(2023, 07, 01), PricePerNight = 83,
+                    LocalAirports = ["AGP"], Nights = 7
+                }
             }
         ).SetName("Holiday Search 1");
-        
+
         yield return new TestCaseData(
-            new HolidaySearchRequest { DepartingFrom = "London", ArrivingAt = "PMI", DepartureDate = new DateTime(2023, 06, 15), Duration = 10 },
+            new HolidaySearchRequest
+            {
+                DepartingFrom = "London", ArrivingAt = "PMI", DepartureDate = new DateTime(2023, 06, 15), Duration = 10
+            },
             new HolidaySearchResponse
             {
-                Flight = new Flight { Id = 6, Airline = "Fresh Airways", From = "LGW", To = "PMI", Price = 75, DepartureDate = new DateTime(2023, 06, 15) },
-                Hotel = new Hotel { Id = 5, Name = "Sol Katmandu Resort & Park", ArrivalDate = new DateTime(2023, 06, 15), PricePerNight = 60, LocalAirports = ["PMI"], Nights = 10 }
+                Flight = new Flight
+                {
+                    Id = 6, Airline = "Fresh Airways", From = "LGW", To = "PMI", Price = 75,
+                    DepartureDate = new DateTime(2023, 06, 15)
+                },
+                Hotel = new Hotel
+                {
+                    Id = 5, Name = "Sol Katmandu Park & Resort", ArrivalDate = new DateTime(2023, 06, 15),
+                    PricePerNight = 60, LocalAirports = ["PMI"], Nights = 10
+                }
             }
         ).SetName("Holiday Search 2");
-    
+
         yield return new TestCaseData(
-            new HolidaySearchRequest { DepartingFrom = "", ArrivingAt = "LPA", DepartureDate = new DateTime(2022, 01, 10), Duration = 14 },
+            new HolidaySearchRequest
+                { DepartingFrom = "", ArrivingAt = "LPA", DepartureDate = new DateTime(2022, 11, 10), Duration = 14 },
             new HolidaySearchResponse
             {
-                Flight = new Flight { Id = 7, Airline = "Trans American Airlines", From = "MAN", To = "LPA", Price = 125, DepartureDate = new DateTime(2022, 11, 10) },
-                Hotel = new Hotel { Id = 7, Name = "Club Maspalomas Suites and Spa", ArrivalDate = new DateTime(2022, 11, 10), PricePerNight = 75, LocalAirports = ["LPA"], Nights = 14 }
+                Flight = new Flight
+                {
+                    Id = 7, Airline = "Trans American Airlines", From = "MAN", To = "LPA", Price = 125,
+                    DepartureDate = new DateTime(2022, 11, 10)
+                },
+                Hotel = new Hotel
+                {
+                    Id = 6, Name = "Club Maspalomas Suites and Spa", ArrivalDate = new DateTime(2022, 11, 10),
+                    PricePerNight = 75, LocalAirports = ["LPA"], Nights = 14
+                }
             }
         ).SetName("Holiday Search 3");
     }
@@ -55,13 +84,6 @@ public class Tests
 
 public class HolidaySearch
 {
-    private readonly Dictionary<string, string[]> _cityToAirports = new Dictionary<string, string[]>()
-    {
-        { "London", new[] { "LHR", "LGW", "LTN", "STN", "LCY", "SEN" } },
-        { "New York", new[] { "JFK", "LGA", "EWR" } },
-    };
-
-
     public HolidaySearch(string flightsDataPath, string hotelDataPath, HolidaySearchRequest request)
     {
         var flightJson = File.ReadAllText(flightsDataPath);
@@ -73,7 +95,17 @@ public class HolidaySearch
 
         flights = flights.Where(x => x.DepartureDate == request.DepartureDate).ToList();
 
-        flights = flights.Where(x => x.From == request.DepartingFrom).ToList();
+        if (!string.IsNullOrWhiteSpace(request.DepartingFrom))
+        {
+            if (request.DepartingFrom == "London")
+            {
+                flights = flights.Where(x => x.From == "LTN" || x.From == "LGW").ToList();
+            }
+            else
+            {
+                flights = flights.Where(x => x.From == request.DepartingFrom).ToList();
+            }
+        }
 
         flights = flights.Where(x => x.To == request.ArrivingAt).ToList();
 
@@ -81,10 +113,9 @@ public class HolidaySearch
 
         hotels = hotels.Where(x => x.Nights == request.Duration).ToList();
 
+        flights = flights.OrderBy(x => x.Price).ToList();
 
-        flights = flights.OrderByDescending(x => x.Price).ToList();
-        
-        hotels = hotels.OrderByDescending(x => x.PricePerNight).ToList();
+        hotels = hotels.OrderBy(x => x.PricePerNight).ToList();
 
 
         Results = flights.Select(x => new HolidaySearchResponse
@@ -97,8 +128,6 @@ public class HolidaySearch
     public List<HolidaySearchResponse> Results { get; set; }
 }
 
-
-
 public record HolidaySearchResponse
 {
     public Flight Flight { get; set; }
@@ -109,13 +138,10 @@ public record Hotel
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    [JsonProperty("arrival_date")]
-    public DateTime ArrivalDate { get; set; }
-    [JsonProperty("local_airports")]
-    public string[] LocalAirports { get; set; }
-    
-    [JsonProperty("price_per_night")]
-    public decimal PricePerNight { get; set; }
+    [JsonProperty("arrival_date")] public DateTime ArrivalDate { get; set; }
+    [JsonProperty("local_airports")] public string[] LocalAirports { get; set; }
+
+    [JsonProperty("price_per_night")] public decimal PricePerNight { get; set; }
     public int Nights { get; set; }
 }
 
@@ -126,8 +152,7 @@ public record Flight
     public string To { get; set; }
     public decimal Price { get; set; }
     public string Airline { get; set; }
-    [JsonProperty("departure_date")]
-    public DateTime DepartureDate { get; set; }
+    [JsonProperty("departure_date")] public DateTime DepartureDate { get; set; }
 }
 
 public record HolidaySearchRequest
@@ -135,5 +160,5 @@ public record HolidaySearchRequest
     public string DepartingFrom { get; set; }
     public string ArrivingAt { get; set; }
     public DateTime? DepartureDate { get; set; }
-    public int Duration {get; set; }
+    public int Duration { get; set; }
 }
