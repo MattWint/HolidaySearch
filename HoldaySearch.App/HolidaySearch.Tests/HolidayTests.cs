@@ -1,21 +1,16 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using HolidaySearch.App;
 using Shouldly;
 
 namespace HolidaySearch.Tests;
 
 public class Tests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
 
     [Test]
     [TestCaseSource(nameof(HolidayTestCases))]
-    public void ShouldReturn(HolidaySearchRequest request, HolidaySearchResponse response)
+    public void ShouldReturn_ExpectedSearchResultsWhenRequestPopulated(HolidaySearchRequest request, HolidaySearchResponse response)
     {
-        var holidaySearch = new HolidaySearch("flights.json", "hotels.json", request);
+        var holidaySearch = new App.HolidaySearch("flights.json", "hotels.json", request);
 
         var topSearchResult = holidaySearch.Results.First();
 
@@ -80,85 +75,4 @@ public class Tests
             }
         ).SetName("Holiday Search 3");
     }
-}
-
-public class HolidaySearch
-{
-    public HolidaySearch(string flightsDataPath, string hotelDataPath, HolidaySearchRequest request)
-    {
-        var flightJson = File.ReadAllText(flightsDataPath);
-        var hotelJson = File.ReadAllText(hotelDataPath);
-
-        var flights = JsonConvert.DeserializeObject<IEnumerable<Flight>>(flightJson);
-
-        var hotels = JsonConvert.DeserializeObject<IEnumerable<Hotel>>(hotelJson);
-
-        flights = flights.Where(x => x.DepartureDate == request.DepartureDate).ToList();
-
-        if (!string.IsNullOrWhiteSpace(request.DepartingFrom))
-        {
-            if (request.DepartingFrom == "London")
-            {
-                flights = flights.Where(x => x.From == "LTN" || x.From == "LGW").ToList();
-            }
-            else
-            {
-                flights = flights.Where(x => x.From == request.DepartingFrom).ToList();
-            }
-        }
-
-        flights = flights.Where(x => x.To == request.ArrivingAt).ToList();
-
-        hotels = hotels.Where(x => x.ArrivalDate == request.DepartureDate).ToList();
-
-        hotels = hotels.Where(x => x.Nights == request.Duration).ToList();
-
-        flights = flights.OrderBy(x => x.Price).ToList();
-
-        hotels = hotels.OrderBy(x => x.PricePerNight).ToList();
-
-
-        Results = flights.Select(x => new HolidaySearchResponse
-        {
-            Flight = x,
-            Hotel = hotels.First()
-        }).ToList();
-    }
-
-    public List<HolidaySearchResponse> Results { get; set; }
-}
-
-public record HolidaySearchResponse
-{
-    public Flight Flight { get; set; }
-    public Hotel Hotel { get; set; }
-}
-
-public record Hotel
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    [JsonProperty("arrival_date")] public DateTime ArrivalDate { get; set; }
-    [JsonProperty("local_airports")] public string[] LocalAirports { get; set; }
-
-    [JsonProperty("price_per_night")] public decimal PricePerNight { get; set; }
-    public int Nights { get; set; }
-}
-
-public record Flight
-{
-    public int Id { get; set; }
-    public string From { get; set; }
-    public string To { get; set; }
-    public decimal Price { get; set; }
-    public string Airline { get; set; }
-    [JsonProperty("departure_date")] public DateTime DepartureDate { get; set; }
-}
-
-public record HolidaySearchRequest
-{
-    public string DepartingFrom { get; set; }
-    public string ArrivingAt { get; set; }
-    public DateTime? DepartureDate { get; set; }
-    public int Duration { get; set; }
 }
