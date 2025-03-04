@@ -1,4 +1,5 @@
 ﻿using HolidaySearch.App;
+using HolidaySearch.App.Data;
 using Shouldly;
 
 namespace HolidaySearch.Tests;
@@ -24,18 +25,10 @@ public class Tests
                 { DepartingFrom = "MAN", ArrivingAt = "AGP", DepartureDate = new DateTime(2023, 07, 01), Duration = 7 },
             new HolidaySearchResponse
             {
-                Flight = new Flight
-                {
-                    Id = 2, Airline = "Oceanic Airlines", From = "MAN", To = "AGP", Price = 245,
-                    DepartureDate = new DateTime(2023, 07, 01)
-                },
-                Hotel = new Hotel
-                {
-                    Id = 9, Name = "Nh Malaga", ArrivalDate = new DateTime(2023, 07, 01), PricePerNight = 83,
-                    LocalAirports = ["AGP"], Nights = 7
-                }
+                Flight = Flights.Data.First(x => x.Id ==  2),
+                Hotel = Hotels.Data.First(x => x.Id == 9)
             }
-        ).SetName("Holiday Search 1");
+        ).SetName("London to Malaga");
 
         yield return new TestCaseData(
             new HolidaySearchRequest
@@ -44,35 +37,19 @@ public class Tests
             },
             new HolidaySearchResponse
             {
-                Flight = new Flight
-                {
-                    Id = 6, Airline = "Fresh Airways", From = "LGW", To = "PMI", Price = 75,
-                    DepartureDate = new DateTime(2023, 06, 15)
-                },
-                Hotel = new Hotel
-                {
-                    Id = 5, Name = "Sol Katmandu Park & Resort", ArrivalDate = new DateTime(2023, 06, 15),
-                    PricePerNight = 60, LocalAirports = ["PMI"], Nights = 10
-                }
+                Flight = Flights.Data.First(x => x.Id ==  6),
+                Hotel = Hotels.Data.First(x => x.Id ==  5)
             }
-        ).SetName("Holiday Search 2");
+        ).SetName("Any London airport to Mallorca");
 
         yield return new TestCaseData(
             new HolidaySearchRequest
                 { DepartingFrom = "", ArrivingAt = "LPA", DepartureDate = new DateTime(2022, 11, 10), Duration = 14 },
             new HolidaySearchResponse
             {
-                Flight = new Flight
-                {
-                    Id = 7, Airline = "Trans American Airlines", From = "MAN", To = "LPA", Price = 125,
-                    DepartureDate = new DateTime(2022, 11, 10)
-                },
-                Hotel = new Hotel
-                {
-                    Id = 6, Name = "Club Maspalomas Suites and Spa", ArrivalDate = new DateTime(2022, 11, 10),
-                    PricePerNight = 75, LocalAirports = ["LPA"], Nights = 14
-                }
+                Flight = Flights.Data.First(x => x.Id ==  7),
+                Hotel = Hotels.Data.First(x => x.Id == 6)
             }
-        ).SetName("Holiday Search 3");
+        ).SetName("Any airport to Gran Canaria");
     }
 }
