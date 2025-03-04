@@ -1,0 +1,14 @@
+﻿using Newtonsoft.Json;
+
+namespace HolidaySearch.App;
+
+public record Flight
+{
+    public int Id { get; set; }
+    public string From { get; set; }
+    public string To { get; set; }
+    public decimal Price { get; set; }
+    public string Airline { get; set; }
+    [JsonProperty("departure_date")]
+    public DateTime DepartureDate { get; set; }
+}
