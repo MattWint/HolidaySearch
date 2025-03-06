@@ -19,7 +19,25 @@ public class HolidaySearchPerformsValidationTests
         var holidaySearch = HolidaySearchFactory.CreateDefault();
 
         Should.Throw<ArgumentException>(() =>
-            holidaySearch.Search( request)
+            holidaySearch.Search(request)
+        );
+    }
+    
+    [Test]
+    public void ShouldReturnError_WhenDepartureDateIsMissing()
+    {
+        var request = new HolidaySearchRequest
+        {
+            ArrivingAt = "LGW",
+            DepartingFrom = "LTN",
+            DepartureDate = default(DateTime),
+            Duration = 10
+        };
+        
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
+
+        Should.Throw<ArgumentException>(() =>
+            holidaySearch.Search(request)
         );
     }
     

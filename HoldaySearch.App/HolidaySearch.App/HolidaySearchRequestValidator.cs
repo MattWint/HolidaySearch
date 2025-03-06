@@ -8,6 +8,6 @@ public class HolidaySearchRequestValidator : AbstractValidator<HolidaySearchRequ
     {
         RuleFor(x => x.Duration)
             .GreaterThan(0)
-            .WithMessage("Duration greater than 0 is required.");
+            .WithMessage("Duration must be greater than zero.");
     }
 }
