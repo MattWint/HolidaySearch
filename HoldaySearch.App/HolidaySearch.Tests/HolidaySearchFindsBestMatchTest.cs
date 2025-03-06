@@ -4,11 +4,10 @@ using Shouldly;
 
 namespace HolidaySearch.Tests;
 
-public class HolidaySearchFindsOptimalMatchTest
+public class HolidaySearchFindsBestMatchTest
 {
-
     [Test]
-    [TestCaseSource(nameof(HolidayTestCases))]
+    [TestCaseSource(nameof(HolidayBestMatchTestCases))]
     public void ShouldReturn_ExpectedSearchResultsWhenRequestPopulated(HolidaySearchRequest request, HolidaySearchResponse response)
     {
         var holidaySearch = new App.HolidaySearch(request);
@@ -18,7 +17,7 @@ public class HolidaySearchFindsOptimalMatchTest
         topSearchResult.ShouldBeEquivalentTo(response);
     }
 
-    private static IEnumerable<TestCaseData> HolidayTestCases()
+    private static IEnumerable<TestCaseData> HolidayBestMatchTestCases()
     {
         yield return new TestCaseData(
             new HolidaySearchRequest
