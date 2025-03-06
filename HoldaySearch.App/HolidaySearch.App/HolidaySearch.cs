@@ -25,7 +25,7 @@ public class HolidaySearch(
                 Hotel = hotel,
                 Flight = flight
             })
-            .OrderBy(x => x.Flight.Price + x.Hotel.PricePerNight) // Number of nights is constant for a given search
+            .OrderBy(x => x.Flight.Price + x.Hotel.PricePerNight) // Number of nights is constant for a given search, don't need to factor it in here
             .ToList();
 
         return results;
