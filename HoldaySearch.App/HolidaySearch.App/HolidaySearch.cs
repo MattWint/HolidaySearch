@@ -16,6 +16,11 @@ public class HolidaySearch
     {
         _flightData = flightData;
         _hotelData = hotelData;
+
+        if (request.Duration == 0)
+        {
+            throw new ArgumentException("Duration must be greater than 0");
+        }
         
         FindFlights(request);
         FindHotels(request);
