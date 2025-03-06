@@ -1,5 +1,4 @@
 ﻿using HolidaySearch.App;
-using HolidaySearch.App.Data;
 using Shouldly;
 
 namespace HolidaySearch.Tests;
@@ -18,11 +17,13 @@ public class HolidaySearchDoesNotContainDuplicates
             Duration = 14
         };
         
-        var holidaySearch = new App.HolidaySearch(Flights.Data, Hotels.Data, request);
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
 
+        var results = holidaySearch.Search(request);
+        
         var hotels = new HashSet<string>();
 
-        foreach (var holiday in holidaySearch.Results)
+        foreach (var holiday in results)
         {
             hotels.ShouldNotContain(holiday.Hotel.Name);
             hotels.Add(holiday.Hotel.Name);

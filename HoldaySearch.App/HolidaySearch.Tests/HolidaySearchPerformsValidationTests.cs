@@ -1,5 +1,4 @@
 ﻿using HolidaySearch.App;
-using HolidaySearch.App.Data;
 using Shouldly;
 
 namespace HolidaySearch.Tests;
@@ -16,9 +15,11 @@ public class HolidaySearchPerformsValidationTests
             DepartureDate = DateTime.Today,
             Duration = 0
         };
+        
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
 
         Should.Throw<ArgumentException>(() =>
-            new App.HolidaySearch(Flights.Data, Hotels.Data, request)
+            holidaySearch.Search( request)
         );
     }
     
@@ -33,9 +34,9 @@ public class HolidaySearchPerformsValidationTests
             Duration = 10
         };
         
-        var holidaySearch = new App.HolidaySearch(Flights.Data, Hotels.Data, request);
-
-        holidaySearch.Results.ShouldBeEmpty();
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
+        
+        holidaySearch.Search(request).ShouldBeEmpty();
     }
     
     [Test]
@@ -48,9 +49,9 @@ public class HolidaySearchPerformsValidationTests
             DepartureDate = DateTime.Today,
             Duration = 10
         };
-        
-        var holidaySearch = new App.HolidaySearch(Flights.Data, Hotels.Data, request);
 
-        holidaySearch.Results.ShouldBeEmpty();
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
+
+        holidaySearch.Search(request).ShouldBeEmpty();
     }
 }

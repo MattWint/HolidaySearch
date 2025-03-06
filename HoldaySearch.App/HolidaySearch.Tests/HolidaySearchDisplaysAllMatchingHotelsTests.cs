@@ -1,5 +1,4 @@
 ﻿using HolidaySearch.App;
-using HolidaySearch.App.Data;
 using Shouldly;
 
 namespace HolidaySearch.Tests;
@@ -12,13 +11,15 @@ public class HolidaySearchDisplaysAllMatchingHotelsTests
                  "The consumer (UI) could then display each hotel once with the ability to edit the flight")]
     public void ShouldMatchAllHotelsWithFlights_AndOrderByBestValue_WhenMultipleHotelsMatchCriteria(HolidaySearchRequest request, (int flightId, int hotelId)[] combinations)
     {
-        var holidaySearch = new App.HolidaySearch(Flights.Data, Hotels.Data, request);
-        
-        holidaySearch.Results.Count.ShouldBe(combinations.Length);
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
 
-        for (var i = 0; i < holidaySearch.Results.Count; i++)
+        var results = holidaySearch.Search(request);
+        
+        results.Count.ShouldBe(combinations.Length);
+
+        for (var i = 0; i < results.Count; i++)
         {
-            var searchResult = holidaySearch.Results[i];
+            var searchResult = results[i];
             var expectedResult = combinations[i];
             
             searchResult.Flight.Id.ShouldBe(expectedResult.flightId);

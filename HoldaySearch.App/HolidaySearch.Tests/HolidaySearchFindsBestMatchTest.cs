@@ -10,9 +10,11 @@ public class HolidaySearchFindsBestMatchTest
     [TestCaseSource(nameof(HolidayBestMatchTestCases))]
     public void ShouldReturnExpectedSearchResults_WhenRequestPopulated(HolidaySearchRequest request, HolidaySearchResponse response)
     {
-        var holidaySearch = new App.HolidaySearch(Flights.Data, Hotels. Data, request);
+        var holidaySearch = HolidaySearchFactory.CreateDefault();
 
-        var topSearchResult = holidaySearch.Results.First();
+        var results = holidaySearch.Search(request);
+
+        var topSearchResult = results.First();
 
         topSearchResult.ShouldBeEquivalentTo(response);
     }
