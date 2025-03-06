@@ -33,8 +33,8 @@ public class HolidaySearch
     private void FindHotels(HolidaySearchRequest request)
     {
         _hotelData = _hotelData.Where(x => x.ArrivalDate == request.DepartureDate);
-
         _hotelData = _hotelData.Where(x => x.Nights == request.Duration);
+        _hotelData = _hotelData.DistinctBy(x => x.Name);
     }
 
     private void FindFlights(HolidaySearchRequest request)

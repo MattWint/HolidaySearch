@@ -13,6 +13,7 @@ public class HolidaySearchDoesNotContainDuplicates
         var request = new HolidaySearchRequest
         {
             ArrivingAt = "PMI",
+            DepartingFrom = "LTN",
             DepartureDate = new DateTime(2023, 06, 15),
             Duration = 14
         };
