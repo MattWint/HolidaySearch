@@ -4,8 +4,8 @@ namespace HolidaySearch.App;
 
 public class HolidaySearch
 {
-    private IEnumerable<Flight> _flightsSearchResult;
-    private IEnumerable<Hotel> _hotelSearchResult;
+    private IEnumerable<Flight> _flightData;
+    private IEnumerable<Hotel> _hotelData;
     
     private readonly Dictionary<string, string[]> _cityToAirports = new()
     {
@@ -14,14 +14,14 @@ public class HolidaySearch
     
     public HolidaySearch(IEnumerable<Flight> flightData, IEnumerable<Hotel> hotelData, HolidaySearchRequest request)
     {
-        _flightsSearchResult = flightData;
-        _hotelSearchResult = hotelData;
+        _flightData = flightData;
+        _hotelData = hotelData;
         
         FindFlights(request);
         FindHotels(request);
         
-        Results = _hotelSearchResult
-            .SelectMany(_ => _flightsSearchResult, (hotel, flight) => new HolidaySearchResponse
+        Results = _hotelData
+            .SelectMany(_ => _flightData, (hotel, flight) => new HolidaySearchResponse
             {
                 Hotel = hotel,
                 Flight = flight
@@ -32,28 +32,28 @@ public class HolidaySearch
 
     private void FindHotels(HolidaySearchRequest request)
     {
-        _hotelSearchResult = _hotelSearchResult.Where(x => x.ArrivalDate == request.DepartureDate);
+        _hotelData = _hotelData.Where(x => x.ArrivalDate == request.DepartureDate);
 
-        _hotelSearchResult = _hotelSearchResult.Where(x => x.Nights == request.Duration);
+        _hotelData = _hotelData.Where(x => x.Nights == request.Duration);
     }
 
     private void FindFlights(HolidaySearchRequest request)
     {
-        _flightsSearchResult = _flightsSearchResult.Where(x => x.DepartureDate == request.DepartureDate);
+        _flightData = _flightData.Where(x => x.DepartureDate == request.DepartureDate);
 
         if (!string.IsNullOrWhiteSpace(request.DepartingFrom))
         {
             if (_cityToAirports.TryGetValue(request.DepartingFrom, out var airports))
             {
-                _flightsSearchResult = _flightsSearchResult.Where(x => airports.Contains(x.From));
+                _flightData = _flightData.Where(x => airports.Contains(x.From));
             }
             else
             {
-                _flightsSearchResult = _flightsSearchResult.Where(x => x.From == request.DepartingFrom);
+                _flightData = _flightData.Where(x => x.From == request.DepartingFrom);
             }
         }
 
-        _flightsSearchResult = _flightsSearchResult.Where(x => x.To == request.ArrivingAt);
+        _flightData = _flightData.Where(x => x.To == request.ArrivingAt);
     }
 
     public List<HolidaySearchResponse> Results { get; }
