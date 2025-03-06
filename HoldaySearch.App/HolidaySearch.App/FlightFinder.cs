@@ -1,4 +1,5 @@
 ﻿using HolidaySearch.App.Contracts;
+using HolidaySearch.App.Models;
 
 namespace HolidaySearch.App;
 

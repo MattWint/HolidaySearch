@@ -3,7 +3,7 @@ using HolidaySearch.App.Data;
 
 namespace HolidaySearch.Tests;
 
-public class HolidaySearchFactory
+public static class HolidaySearchFactory
 {
     public static App.HolidaySearch CreateDefault()
     {

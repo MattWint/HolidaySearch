@@ -1,5 +1,6 @@
 ﻿using HolidaySearch.App;
 using HolidaySearch.App.Data;
+using HolidaySearch.App.Models;
 using Shouldly;
 
 namespace HolidaySearch.Tests;
@@ -7,6 +8,7 @@ namespace HolidaySearch.Tests;
 public class HolidaySearchFindsBestMatchTest
 {
     [Test]
+    [Description("Returns best match with fully populated holiday response object")]
     [TestCaseSource(nameof(HolidayBestMatchTestCases))]
     public void ShouldReturnExpectedSearchResults_WhenRequestPopulated(HolidaySearchRequest request, HolidaySearchResponse response)
     {

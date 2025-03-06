@@ -1,7 +1,7 @@
-﻿namespace HolidaySearch.App;
+﻿namespace HolidaySearch.App.Models;
 
 public record HolidaySearchResponse
 {
-    public Flight Flight { get; set; }
-    public Hotel Hotel { get; set; }
+    public required Flight Flight { get; init; }
+    public required Hotel Hotel { get; init; }
 }

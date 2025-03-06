@@ -1,4 +1,6 @@
-﻿namespace HolidaySearch.App.Data;
+﻿using HolidaySearch.App.Models;
+
+namespace HolidaySearch.App.Data;
 
 /// <summary>
 /// I don't think deserialising JSON is something you're interested in

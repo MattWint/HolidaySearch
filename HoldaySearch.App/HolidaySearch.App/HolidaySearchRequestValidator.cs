@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HolidaySearch.App.Models;
 
 namespace HolidaySearch.App;
 

@@ -1,4 +1,4 @@
-﻿using HolidaySearch.App;
+﻿using HolidaySearch.App.Models;
 using Shouldly;
 
 namespace HolidaySearch.Tests;

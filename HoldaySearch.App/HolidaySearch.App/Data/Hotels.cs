@@ -1,4 +1,6 @@
-﻿namespace HolidaySearch.App.Data;
+﻿using HolidaySearch.App.Models;
+
+namespace HolidaySearch.App.Data;
 
 /// <summary>
 /// See comment on <see cref="Flights"/> regarding why the JSOn is now C#
