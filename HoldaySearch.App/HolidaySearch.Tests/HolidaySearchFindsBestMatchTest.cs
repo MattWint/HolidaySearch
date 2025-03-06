@@ -10,7 +10,7 @@ public class HolidaySearchFindsBestMatchTest
     [TestCaseSource(nameof(HolidayBestMatchTestCases))]
     public void ShouldReturnExpectedSearchResults_WhenRequestPopulated(HolidaySearchRequest request, HolidaySearchResponse response)
     {
-        var holidaySearch = new App.HolidaySearch(request);
+        var holidaySearch = new App.HolidaySearch(Flights.Data, Hotels. Data, request);
 
         var topSearchResult = holidaySearch.Results.First();
 
