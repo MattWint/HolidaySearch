@@ -17,9 +17,12 @@ public class HolidaySearch
         _flightData = flightData;
         _hotelData = hotelData;
 
-        if (request.Duration == 0)
+        var validator = new HolidaySearchRequestValidator();
+        var validationResult = validator.Validate(request);
+
+        if (!validationResult.IsValid)
         {
-            throw new ArgumentException("Duration must be greater than 0");
+            throw new ArgumentException(string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)));
         }
         
         FindFlights(request);
