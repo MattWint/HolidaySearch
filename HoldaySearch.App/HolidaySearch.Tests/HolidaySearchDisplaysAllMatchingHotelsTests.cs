@@ -9,7 +9,7 @@ public class HolidaySearchDisplaysAllMatchingHotelsTests
     [TestCaseSource(nameof(HotelPairsTestCases))]
     [Description("Ensure each hotel is paired with each flight. E.g. if there's two hotels, pair with two flights means 4 results." +
                  "The consumer (UI) could then display each hotel once with the ability to edit the flight")]
-    public void ShouldMatchAllHotelsWithFlights_WhenMultipleHotelsMatchCriteria(HolidaySearchRequest request, (int flightId, int hotelId)[] combinations)
+    public void ShouldMatchAllHotelsWithFlights_AndOrderByBestValue_WhenMultipleHotelsMatchCriteria(HolidaySearchRequest request, (int flightId, int hotelId)[] combinations)
     {
         var holidaySearch = new App.HolidaySearch(request);
         
@@ -32,10 +32,10 @@ public class HolidaySearchDisplaysAllMatchingHotelsTests
                 { DepartingFrom = "MAN", ArrivingAt = "PMI", DepartureDate = new DateTime(2023, 6, 15), Duration = 10 },
             new (int flightId, int hotelId)[]
             {
-                (5, 5),
-                (5, 13),
-                (3, 5),
-                (3, 13)
+                (5, 5), // 130 + (10 * 60) 
+                (3, 5), // 170 + (10 * 60)
+                (5, 13), // 130 + 10 * 295)
+                (3, 13) // 170 + (10 * 295)
             }
         ).SetName("Manchester to Mallorca");
     }

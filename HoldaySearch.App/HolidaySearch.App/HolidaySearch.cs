@@ -16,12 +16,14 @@ public class HolidaySearch
     {
         FindFlights(request);
         FindHotels(request);
-
-        Results = _flightsSearchResult.Select(x => new HolidaySearchResponse
-        {
-            Flight = x,
-            Hotel = _hotelSearchResult.First()
-        }).ToList();
+        
+        Results = _hotelSearchResult
+            .SelectMany(_ => _flightsSearchResult, (hotel, flight) => new HolidaySearchResponse
+            {
+                Hotel = hotel,
+                Flight = flight
+            })
+            .ToList();
     }
 
     private void FindHotels(HolidaySearchRequest request)
