@@ -23,6 +23,7 @@ public class HolidaySearch
                 Hotel = hotel,
                 Flight = flight
             })
+            .OrderBy(x => x.Flight.Price + x.Hotel.PricePerNight) // Duration is constant for a given search so we don't need to factor it into the price
             .ToList();
     }
 
@@ -32,9 +33,7 @@ public class HolidaySearch
 
         hotels = hotels.Where(x => x.ArrivalDate == request.DepartureDate);
 
-        hotels = hotels.Where(x => x.Nights == request.Duration);
-
-        _hotelSearchResult = hotels.OrderBy(x => x.PricePerNight);
+        _hotelSearchResult = hotels.Where(x => x.Nights == request.Duration);
     }
 
     private void FindFlights(HolidaySearchRequest request)
@@ -55,9 +54,7 @@ public class HolidaySearch
             }
         }
 
-        flights = flights.Where(x => x.To == request.ArrivingAt);
-        
-        _flightsSearchResult = flights.OrderBy(x => x.Price);
+        _flightsSearchResult = flights.Where(x => x.To == request.ArrivingAt);
     }
 
     public List<HolidaySearchResponse> Results { get; }
